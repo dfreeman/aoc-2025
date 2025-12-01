@@ -1,7 +1,7 @@
 use aoc::prelude::*;
 
 aoc::solution! {
-    year: 2024,
+    year: 2025,
     day: 000000,
     part_1,
     part_2,
