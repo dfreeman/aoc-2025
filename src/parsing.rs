@@ -1,4 +1,4 @@
-use nom::Parser;
+pub use nom::Parser;
 
 pub trait ParseExts
 where
