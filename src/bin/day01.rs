@@ -66,10 +66,7 @@ fn part_2(input: &str) -> i32 {
         }
 
         // Wrap back to 0..100
-        position %= 100;
-        if position < 0 {
-            position += 100;
-        }
+        position = position.rem_euclid(100);
     }
     zeroes
 }
