@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use std::ops::RangeBounds;
 
 aoc::solution! {
@@ -19,13 +18,13 @@ fn parse(input: &str) -> Vec<Vec<u64>> {
 fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
     use std::ops::Bound::*;
 
-    let offset_start = match range.start_bound() {
+    let skip_start = match range.start_bound() {
         Included(&n) => n,
         Excluded(&n) => n + 1,
         Unbounded => 0,
     };
 
-    let offset_end = match range.end_bound() {
+    let skip_end = match range.end_bound() {
         Included(&n) => els.len() - n - 1,
         Excluded(&n) => els.len() - n,
         Unbounded => 0,
@@ -33,11 +32,11 @@ fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
 
     els.iter()
         .enumerate()
-        .dropping(offset_start)
-        .dropping_back(offset_end)
-        .rev() // `max_by` returns the last max, and we want the first
+        .skip(skip_start)
+        .rev()
+        .skip(skip_end)
         .max_by(|&(_, a), &(_, b)| a.cmp(b))
-        .unwrap()
+        .expect("max_in called with an empty Vec")
 }
 
 fn part_1(input: &Vec<Vec<u64>>) -> u64 {
@@ -52,15 +51,14 @@ fn part_1(input: &Vec<Vec<u64>>) -> u64 {
 
 fn part_2(input: &Vec<Vec<u64>>) -> u64 {
     let mut sum = 0;
-        let mut row_sum = 0;
     for row in input {
         let mut start = 0;
         for place in (0..12).rev() {
-            let (idx, val) = max_in(&row, index..(row.len() - place));
-            row_sum += 10u64.pow(place as u32) * val;
-            index = idx + 1;
+            let end = row.len() - place;
+            let (idx, val) = max_in(&row, start..end);
+            sum += 10u64.pow(place as u32) * val;
+            start = idx + 1;
         }
-        sum += row_sum;
     }
     sum
 }
