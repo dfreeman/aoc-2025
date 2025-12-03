@@ -7,11 +7,12 @@ use nom::{
 aoc::solution! {
     year: 2025,
     day: 1,
+    parse,
     part_1,
     part_2,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Dir {
     Left,
     Right,
@@ -34,10 +35,10 @@ fn parse(input: &str) -> Vec<(Dir, i32)> {
     input.parse_lines(pair(dir, i32))
 }
 
-fn part_1(input: &str) -> i32 {
+fn part_1(input: &Vec<(Dir, i32)>) -> i32 {
     let mut zeroes: i32 = 0;
     let mut position: i32 = 50;
-    for (dir, dist) in parse(input) {
+    for (dir, dist) in input {
         position += dir.as_i32() * dist;
         position %= 100;
         if position == 0 {
@@ -47,10 +48,10 @@ fn part_1(input: &str) -> i32 {
     zeroes
 }
 
-fn part_2(input: &str) -> i32 {
+fn part_2(input: &Vec<(Dir, i32)>) -> i32 {
     let mut zeroes: i32 = 0;
     let mut position: i32 = 50;
-    for (dir, mut dist) in parse(input) {
+    for &(dir, mut dist) in input {
         // Account for any full spins
         zeroes += dist / 100;
         dist %= 100;
@@ -91,11 +92,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part_1(SAMPLE_INPUT), 3);
+        assert_eq!(part_1(&parse(SAMPLE_INPUT)), 3);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part_2(SAMPLE_INPUT), 6);
+        assert_eq!(part_2(&parse(SAMPLE_INPUT)), 6);
     }
 }

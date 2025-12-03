@@ -4,6 +4,7 @@ use std::ops::RangeBounds;
 aoc::solution! {
     year: 2025,
     day: 3,
+    parse,
     part_1,
     part_2,
 }
@@ -39,9 +40,9 @@ fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
         .unwrap()
 }
 
-fn part_1(input: &str) -> u64 {
+fn part_1(input: &Vec<Vec<u64>>) -> u64 {
     let mut sum = 0;
-    for row in parse(input) {
+    for row in input {
         let (idx, lhs) = max_in(&row, ..(row.len() - 1));
         let (_, rhs) = max_in(&row, (idx + 1)..);
         sum += (10 * lhs) + rhs;
@@ -49,11 +50,11 @@ fn part_1(input: &str) -> u64 {
     sum
 }
 
-fn part_2(input: &str) -> u64 {
+fn part_2(input: &Vec<Vec<u64>>) -> u64 {
     let mut sum = 0;
-    for row in parse(input) {
-        let mut index = 0;
         let mut row_sum = 0;
+    for row in input {
+        let mut start = 0;
         for place in (0..12).rev() {
             let (idx, val) = max_in(&row, index..(row.len() - place));
             row_sum += 10u64.pow(place as u32) * val;
@@ -78,11 +79,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part_1(SAMPLE_INPUT), 357);
+        assert_eq!(part_1(&parse(SAMPLE_INPUT)), 357);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part_2(SAMPLE_INPUT), 3121910778619);
+        assert_eq!(part_2(&parse(SAMPLE_INPUT)), 3121910778619);
     }
 }

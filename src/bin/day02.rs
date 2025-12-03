@@ -8,6 +8,7 @@ use nom::{
 aoc::solution! {
     year: 2025,
     day: 2,
+    parse,
     part_1,
     part_2,
 }
@@ -20,8 +21,8 @@ fn parse(input: &str) -> Vec<(u64, u64)> {
 }
 
 /// "Oh cool, I can just do this with math!"
-fn part_1(input: &str) -> u64 {
-    parse(input)
+fn part_1(input: &Vec<(u64, u64)>) -> u64 {
+    input
         .iter()
         .flat_map(|&(start, end)| {
             let start_len = start.digit_count();
@@ -65,8 +66,8 @@ fn split(n: u64, parts: u32) -> Option<Vec<u64>> {
 }
 
 /// "...actually, brute force is sounding pretty good right now."
-fn part_2(input: &str) -> u64 {
-    parse(input)
+fn part_2(input: &Vec<(u64, u64)>) -> u64 {
+    input
         .iter()
         .map(|&(start, end)| {
             let mut total = 0;
@@ -98,11 +99,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part_1(SAMPLE_INPUT), 1227775554);
+        assert_eq!(part_1(&parse(SAMPLE_INPUT)), 1227775554);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part_2(SAMPLE_INPUT), 4174379265);
+        assert_eq!(part_2(&parse(SAMPLE_INPUT)), 4174379265);
     }
 }

@@ -11,14 +11,15 @@ macro_rules! solution {
     };
 }
 
-pub struct Solution<S1: ToString, S2: ToString> {
+pub struct Solution<I, S1: ToString, S2: ToString> {
     pub day: u8,
     pub year: u16,
-    pub part_1: fn(&str) -> S1,
-    pub part_2: fn(&str) -> S2,
+    pub parse: fn(&str) -> I,
+    pub part_1: fn(&I) -> S1,
+    pub part_2: fn(&I) -> S2,
 }
 
-impl<S1: ToString, S2: ToString> Solution<S1, S2> {
+impl<I, S1: ToString, S2: ToString> Solution<I, S1, S2> {
     pub fn run(&self) {
         let options = CLIOptions::parse();
         let client = libaoc::Client::new().expect("Failed to create AoC client");
@@ -26,10 +27,14 @@ impl<S1: ToString, S2: ToString> Solution<S1, S2> {
         let input = client
             .get_input(&puzzle_id)
             .expect("Failed to fetch puzzle input");
+        let (parsed, parse_time) = time(|| (self.parse)(&input));
 
         if options.part.includes_part_1() {
-            let (result, duration) = time(|| (self.part_1)(&input));
-            println!("Part 1: {} (took {:?})", result, duration);
+            let (result, solve_time) = time(|| (self.part_1)(&parsed));
+            let result = result.to_string();
+
+            println!("Part 1: {result} (parse {parse_time:?}, solve {solve_time:?})");
+
             if options.submit {
                 client
                     .submit(&puzzle_id, Some(1), result)
@@ -38,8 +43,11 @@ impl<S1: ToString, S2: ToString> Solution<S1, S2> {
         }
 
         if options.part.includes_part_2() {
-            let (result, duration) = time(|| (self.part_2)(&input));
-            println!("Part 2: {} (took {:?})", result, duration);
+            let (result, solve_time) = time(|| (self.part_2)(&parsed));
+            let result = result.to_string();
+
+            println!("Part 2: {result} (parse {parse_time:?}, solve {solve_time:?})");
+
             if options.submit {
                 client
                     .submit(&puzzle_id, Some(2), result)
@@ -49,11 +57,11 @@ impl<S1: ToString, S2: ToString> Solution<S1, S2> {
     }
 }
 
-fn time<S: ToString>(f: impl FnOnce() -> S) -> (String, std::time::Duration) {
+fn time<S>(f: impl FnOnce() -> S) -> (S, std::time::Duration) {
     let start = Instant::now();
     let result = f();
     let end = Instant::now();
-    (result.to_string(), end - start)
+    (result, end - start)
 }
 
 #[derive(clap::Parser)]
