@@ -13,7 +13,7 @@ mod tests {
     use indoc::indoc;
 
     const SAMPLE_INPUT: &str = indoc! {"
-    
+
     "};
 
     #[test]
