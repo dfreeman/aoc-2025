@@ -58,17 +58,14 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fn all() -> [Direction; 8] {
-        [
-            Direction::N,
-            Direction::NE,
-            Direction::E,
-            Direction::SE,
-            Direction::S,
-            Direction::SW,
-            Direction::W,
-            Direction::NW,
-        ]
+    pub fn all() -> impl Iterator<Item = Direction> {
+        use Direction::*;
+        [N, NE, E, SE, S, SW, W, NW].into_iter()
+    }
+
+    pub fn cardinals() -> impl Iterator<Item = Direction> {
+        use Direction::*;
+        [N, E, S, W].into_iter()
     }
 }
 
@@ -132,6 +129,7 @@ impl<T> Deref for GridCell<'_, T> {
     }
 }
 
+#[derive(Clone)]
 pub struct Grid<T> {
     data: Vec<T>,
     min_row: isize,
@@ -159,12 +157,20 @@ impl<T> Grid<T> {
         }
     }
 
-    pub fn coords(&self) -> impl Iterator<Item = Coord> {
-        (self.min_row..=self.max_row)
-            .flat_map(move |row| (self.min_col..=self.max_col).map(move |col| Coord { row, col }))
+    pub fn cell(&self, coord: Coord) -> GridCell<'_, T> {
+        GridCell {
+            coord,
+            source: self,
+        }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = GridCell<'_, T>> {
+    pub fn coords(&self) -> impl Iterator<Item = Coord> + 'static {
+        let rows = self.min_row..=self.max_row;
+        let cols = self.min_col..=self.max_col;
+        rows.flat_map(move |row| cols.clone().map(move |col| Coord { row, col }))
+    }
+
+    pub fn cells(&self) -> impl Iterator<Item = GridCell<'_, T>> {
         self.coords().map(|coord| GridCell {
             coord,
             source: self,
