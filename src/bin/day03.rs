@@ -1,6 +1,7 @@
+use aoc::prelude::*;
 use std::ops::RangeBounds;
 
-aoc::solution! {
+solution! {
     year: 2025,
     day: 3,
     parse,

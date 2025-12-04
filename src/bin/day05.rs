@@ -6,7 +6,7 @@ use nom::{
     sequence::separated_pair,
 };
 
-aoc::solution! {
+solution! {
     year: 2025,
     day: 5,
     parse,

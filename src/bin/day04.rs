@@ -3,7 +3,7 @@ use aoc::{
     prelude::*,
 };
 
-aoc::solution! {
+solution! {
     year: 2025,
     day: 4,
     parse,

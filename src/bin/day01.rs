@@ -4,7 +4,7 @@ use nom::{
     sequence::pair,
 };
 
-aoc::solution! {
+solution! {
     year: 2025,
     day: 1,
     parse,
