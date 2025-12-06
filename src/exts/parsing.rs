@@ -3,28 +3,39 @@ pub use nom::Parser;
 use nom::{AsChar, Input, character::complete::*, error::Error, multi::*};
 use std::fmt::Debug;
 
-pub trait ParseFull
+pub trait Parse
 where
     Self: Input + Debug,
 {
     /// Parses the entire input using the provided parser, panicking if the input fails
     /// to parse or if any input remains unparsed.
     fn parse_full<P: Parser<Self, Error = Error<Self>>>(self, parser: P) -> P::Output;
+
+    /// Parses the input using the provided parser, returning any remaining unparsed input
+    /// along with the parser output, or panicking on parse errors.
+    fn parse_partial<P: Parser<Self, Error = Error<Self>>>(self, parser: P) -> (Self, P::Output);
 }
 
-impl ParseFull for &str {
-    fn parse_full<P>(self, mut parser: P) -> P::Output
+impl Parse for &str {
+    fn parse_full<P>(self, parser: P) -> P::Output
     where
         P: Parser<Self, Error = Error<Self>>,
     {
-        match parser.parse(self.trim()).expect("Parse error") {
+        match self.parse_partial(parser) {
             ("", output) => output,
             (remaining, _) => panic!("Failed to parse entire input; trailing: {:?}", remaining),
         }
     }
+
+    fn parse_partial<P: Parser<Self, Error = Error<Self>>>(
+        self,
+        mut parser: P,
+    ) -> (Self, P::Output) {
+        parser.parse(self.trim()).expect("Parse error")
+    }
 }
 
-pub trait CharParseUtils
+pub trait ParseChars
 where
     Self: Input + Debug,
 {
@@ -35,9 +46,9 @@ where
     fn parse_lines<P: Parser<Self, Error = Error<Self>>>(self, parser: P) -> Vec<P::Output>;
 }
 
-impl<T> CharParseUtils for T
+impl<T> ParseChars for T
 where
-    T: ParseFull,
+    T: Parse,
     T::Item: AsChar,
 {
     fn parse_char_grid(self) -> Vec<Vec<char>> {
