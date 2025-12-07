@@ -12,12 +12,7 @@ solution! {
 }
 
 fn parse(input: &str) -> Grid<bool> {
-    let cells = input
-        .parse_char_grid()
-        .iter()
-        .map(|row| row.iter().map(|&c| c == '@').collect())
-        .collect();
-    Grid::new(cells)
+    Grid::new(input.parse_char_grid().map_2d(|c| c == '@'))
 }
 
 fn occupied_neighbours(cell: &GridCell<bool>) -> usize {

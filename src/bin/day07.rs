@@ -17,13 +17,7 @@ type Layout = (isize, Grid<bool>);
 
 fn parse(input: &str) -> Layout {
     let start = input.find('S').expect("should have a starting position");
-    let grid = Grid::new(
-        input
-            .parse_char_grid()
-            .iter()
-            .map(|row| row.iter().map(|&c| c == '^').collect())
-            .collect(),
-    );
+    let grid = Grid::new(input.parse_char_grid().map_2d(|c| c == '^'));
     (start as isize, grid)
 }
 

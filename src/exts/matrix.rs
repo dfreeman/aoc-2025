@@ -19,3 +19,30 @@ impl<T: Copy> Transpose<T> for Vec<Vec<T>> {
         transposed
     }
 }
+
+pub trait Map2D {
+    type Item;
+    type Output<U>;
+
+    fn map_2d<U, F>(self, f: F) -> Self::Output<U>
+    where
+        F: Fn(Self::Item) -> U;
+}
+
+impl<R, C, T> Map2D for R
+where
+    R: IntoIterator<Item = C>,
+    C: IntoIterator<Item = T>,
+{
+    type Item = T;
+    type Output<U> = Vec<Vec<U>>;
+
+    fn map_2d<U, F>(self, f: F) -> Self::Output<U>
+    where
+        F: Fn(Self::Item) -> U,
+    {
+        self.into_iter()
+            .map(|row| row.into_iter().map(|el| f(el)).collect())
+            .collect()
+    }
+}

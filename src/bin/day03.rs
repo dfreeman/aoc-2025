@@ -10,10 +10,7 @@ solution! {
 }
 
 fn parse(input: &str) -> Vec<Vec<u64>> {
-    input
-        .lines()
-        .map(|l| l.chars().map(|c| c as u64 - '0' as u64).collect())
-        .collect()
+    input.parse_char_grid().map_2d(|c| c as u64 - '0' as u64)
 }
 
 fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
