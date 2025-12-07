@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::cell::Cell;
 
 use aoc::{
   grid::{Direction, Grid},
@@ -11,6 +11,29 @@ solution! {
   parse,
   part_1,
   part_2,
+}
+
+struct QuantumNonsense {
+  is_splitter: bool,
+  paths: Cell<u64>,
+}
+
+impl QuantumNonsense {
+  fn new(is_splitter: bool) -> Self {
+    Self {
+      is_splitter,
+      paths: Cell::new(0),
+    }
+  }
+
+  fn increment_paths(&self, count: u64) {
+    let current = self.paths.get();
+    self.paths.set(current + count);
+  }
+
+  fn paths(&self) -> u64 {
+    self.paths.get()
+  }
 }
 
 type Layout = (isize, Grid<bool>);
@@ -47,34 +70,25 @@ fn part_1((start, grid): &Layout) -> u64 {
 }
 
 fn part_2((start, grid): &Layout) -> u64 {
-  let mut paths = 1;
-  let mut cells = HashMap::from([(grid.cell((0, *start)), 1u64)]);
-  while !cells.is_empty() {
-    let mut new_cells = HashMap::new();
-    for (cell, count) in cells {
-      use Direction::*;
-      if let Some(next) = cell.neighbour(S) {
-        if *next {
-          let w = next
-            .neighbour(W)
-            .map(|w| *new_cells.entry(w).or_default() += count);
-          let e = next
-            .neighbour(E)
-            .map(|e| *new_cells.entry(e).or_default() += count);
+  let grid = grid.map(|c| QuantumNonsense::new(*c));
 
-          // If both directions exist, then we've forked: that means each path
-          // that came here has generated an additional one as well.
-          if w.is_some() && e.is_some() {
-            paths += count;
+  grid[(0, *start)].increment_paths(1);
+
+  for cell in grid.cells().filter(|c| c.paths() > 0) {
+    if let Some(next) = cell.neighbour(Direction::S) {
+      if next.is_splitter {
+        for dir in [Direction::W, Direction::E] {
+          if let Some(neighbour) = next.neighbour(dir) {
+            neighbour.increment_paths(cell.paths());
           }
-        } else {
-          *new_cells.entry(next).or_default() += count;
         }
+      } else {
+        next.increment_paths(cell.paths());
       }
     }
-    cells = new_cells;
   }
-  paths
+
+  grid.rows().last().unwrap().map(|c| c.paths()).sum()
 }
 
 #[cfg(test)]

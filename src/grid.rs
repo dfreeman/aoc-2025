@@ -79,7 +79,7 @@ impl Direction {
 }
 
 pub struct GridCell<'a, T> {
-  coord: Coord,
+  pub coord: Coord,
   source: &'a Grid<T>,
 }
 
@@ -180,6 +180,20 @@ impl<T> Grid<T> {
     }
   }
 
+  pub fn map<U, F>(&self, f: F) -> Grid<U>
+  where
+    F: Fn(GridCell<T>) -> U,
+  {
+    let data = self.cells().map(|el| f(el)).collect();
+    Grid {
+      data,
+      min_row: self.min_row,
+      max_row: self.max_row,
+      min_col: self.min_col,
+      max_col: self.max_col,
+    }
+  }
+
   pub fn cell<C: Into<Coord>>(&self, coord: C) -> GridCell<'_, T> {
     GridCell {
       coord: coord.into(),
@@ -187,12 +201,13 @@ impl<T> Grid<T> {
     }
   }
 
-  pub fn rows(&self) -> impl Iterator<Item = isize> + 'static {
-    self.min_row..=self.max_row
-  }
-
-  pub fn cols(&self) -> impl Iterator<Item = isize> + 'static {
-    self.min_col..=self.max_col
+  pub fn rows(&self) -> impl Iterator<Item = impl Iterator<Item = GridCell<'_, T>>> {
+    (self.min_row..=self.max_row).map(move |row| {
+      (self.min_col..=self.max_col).map(move |col| GridCell {
+        coord: Coord { row, col },
+        source: self,
+      })
+    })
   }
 
   pub fn coords(&self) -> impl Iterator<Item = Coord> + 'static {
