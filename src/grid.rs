@@ -1,9 +1,18 @@
-use std::ops::{Deref, Index, IndexMut};
+use std::{
+    hash::Hash,
+    ops::{Deref, Index, IndexMut},
+};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Coord {
     pub row: isize,
     pub col: isize,
+}
+
+impl From<(isize, isize)> for Coord {
+    fn from((row, col): (isize, isize)) -> Self {
+        Coord { row, col }
+    }
 }
 
 impl Coord {
@@ -84,6 +93,20 @@ impl<T> Clone for GridCell<'_, T> {
     }
 }
 
+impl<T> Eq for GridCell<'_, T> {}
+impl<T> PartialEq for GridCell<'_, T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.coord == other.coord && std::ptr::eq(self.source, other.source)
+    }
+}
+
+impl<T> Hash for GridCell<'_, T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.coord.hash(state);
+        std::ptr::hash(self.source, state);
+    }
+}
+
 impl<'a, T> GridCell<'a, T> {
     pub fn neighbour(&self, direction: Direction) -> Option<GridCell<'a, T>> {
         let new_coord = self.coord.translate(direction);
@@ -157,11 +180,19 @@ impl<T> Grid<T> {
         }
     }
 
-    pub fn cell(&self, coord: Coord) -> GridCell<'_, T> {
+    pub fn cell<C: Into<Coord>>(&self, coord: C) -> GridCell<'_, T> {
         GridCell {
-            coord,
+            coord: coord.into(),
             source: self,
         }
+    }
+
+    pub fn rows(&self) -> impl Iterator<Item = isize> + 'static {
+        self.min_row..=self.max_row
+    }
+
+    pub fn cols(&self) -> impl Iterator<Item = isize> + 'static {
+        self.min_col..=self.max_col
     }
 
     pub fn coords(&self) -> impl Iterator<Item = Coord> + 'static {
@@ -185,16 +216,18 @@ impl<T> Grid<T> {
     }
 }
 
-impl<T> Index<Coord> for Grid<T> {
+impl<T, C: Into<Coord>> Index<C> for Grid<T> {
     type Output = T;
 
-    fn index(&self, coord: Coord) -> &Self::Output {
+    fn index(&self, coord: C) -> &Self::Output {
+        let coord = coord.into();
         &self.data[self.coord_offset(coord)]
     }
 }
 
-impl<T> IndexMut<Coord> for Grid<T> {
-    fn index_mut(&mut self, coord: Coord) -> &mut Self::Output {
+impl<T, C: Into<Coord>> IndexMut<C> for Grid<T> {
+    fn index_mut(&mut self, coord: C) -> &mut Self::Output {
+        let coord = coord.into();
         let offset = self.coord_offset(coord);
         &mut self.data[offset]
     }
