@@ -29,7 +29,7 @@ fn sorted_edges(points: &Vec<Point>) -> Vec<(Point, Point)> {
     }
   }
 
-  edges.sort_by_key(|(p1, p2)| p1.distance_squared(p2));
+  edges.sort_by_cached_key(|(p1, p2)| p1.distance_squared(p2));
   edges
 }
 
