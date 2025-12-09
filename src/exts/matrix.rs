@@ -43,7 +43,7 @@ where
   {
     self
       .into_iter()
-      .map(|row| row.into_iter().map(|el| f(el)).collect())
+      .map(|row| row.into_iter().map(&f).collect())
       .collect()
   }
 }

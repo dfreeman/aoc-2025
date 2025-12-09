@@ -21,7 +21,7 @@ struct Point {
   z: u32,
 }
 
-fn sorted_edges(points: &Vec<Point>) -> Vec<(Point, Point)> {
+fn sorted_edges(points: &[Point]) -> Vec<(Point, Point)> {
   let mut edges = Vec::with_capacity((points.len() * (points.len() + 1)) / 2);
   for (i, &p1) in points.iter().enumerate() {
     for &p2 in points.iter().skip(i + 1) {
@@ -60,7 +60,7 @@ impl JunctionGraph {
     match (self.memberships.get(&p1), self.memberships.get(&p2)) {
       (Some(&net1), Some(&net2)) => {
         if net1 != net2 {
-          let net2_members = std::mem::replace(&mut self.networks[net2], HashSet::new());
+          let net2_members = std::mem::take(&mut self.networks[net2]);
           for net2_member in &net2_members {
             self.memberships.insert(*net2_member, net1);
           }

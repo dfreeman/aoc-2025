@@ -79,7 +79,7 @@ fn collect_vertical_problems(lines: Lines) -> Vec<Vec<u64>> {
   let mut current_problem = Vec::new();
   for col in cols {
     let value = col.into_iter().collect::<String>().trim().to_string();
-    if value == "" {
+    if value.is_empty() {
       problems.push(current_problem);
       current_problem = Vec::new();
     } else {

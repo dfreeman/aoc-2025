@@ -32,7 +32,7 @@ fn part_1(input: Vec<(u64, u64)>) -> u64 {
         let second = start % digits;
         first + (first < second) as u64
       } else {
-        10u64.pow((start_len + 1) / 2 - 1)
+        10u64.pow(start_len.div_ceil(2) - 1)
       };
       let end_len = end.digit_count();
       let end_half = if end_len.is_multiple_of(2) {

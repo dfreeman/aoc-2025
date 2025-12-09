@@ -1,4 +1,7 @@
-use std::time::Instant;
+use std::{
+  fmt::{Display, Formatter, Result as FmtResult},
+  time::Instant,
+};
 
 use clap::Parser;
 
@@ -85,12 +88,12 @@ pub enum PartSelection {
   Both,
 }
 
-impl ToString for PartSelection {
-  fn to_string(&self) -> String {
+impl Display for PartSelection {
+  fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
     match self {
-      PartSelection::One => "1".to_string(),
-      PartSelection::Two => "2".to_string(),
-      PartSelection::Both => "both".to_string(),
+      PartSelection::One => write!(f, "1"),
+      PartSelection::Two => write!(f, "2"),
+      PartSelection::Both => write!(f, "both"),
     }
   }
 }

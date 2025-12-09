@@ -13,7 +13,7 @@ fn parse(input: &str) -> Vec<Vec<u64>> {
   input.parse_char_grid().map_2d(|c| c as u64 - '0' as u64)
 }
 
-fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
+fn max_in<T: Ord>(els: &[T], range: impl RangeBounds<usize>) -> (usize, &T) {
   use std::ops::Bound::*;
 
   let skip_start = match range.start_bound() {

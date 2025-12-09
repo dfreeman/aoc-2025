@@ -45,7 +45,7 @@ fn add_border_segment(
 ) {
   border_segments
     .entry(coord)
-    .or_insert_with(|| IntervalSet::empty())
+    .or_insert_with(IntervalSet::empty)
     .extend([sort(start, end).to_interval()]);
 }
 

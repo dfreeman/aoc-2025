@@ -86,10 +86,7 @@ pub struct GridCell<'a, T> {
 impl<T> Copy for GridCell<'_, T> {}
 impl<T> Clone for GridCell<'_, T> {
   fn clone(&self) -> Self {
-    Self {
-      coord: self.coord,
-      source: self.source,
-    }
+    *self
   }
 }
 
@@ -184,7 +181,7 @@ impl<T> Grid<T> {
   where
     F: Fn(GridCell<T>) -> U,
   {
-    let data = self.cells().map(|el| f(el)).collect();
+    let data = self.cells().map(&f).collect();
     Grid {
       data,
       min_row: self.min_row,
