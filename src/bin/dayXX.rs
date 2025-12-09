@@ -19,11 +19,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 0);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 0);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 0);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 0);
   }
 }

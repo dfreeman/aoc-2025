@@ -15,7 +15,7 @@ fn parse(input: &str) -> Vec<(u64, u64)> {
   input.parse_lines(separated_pair(u64, tag(","), u64))
 }
 
-fn part_1(points: &Vec<(u64, u64)>) -> u64 {
+fn part_1(points: Vec<(u64, u64)>) -> u64 {
   let mut max = 0;
   for (i, &(x1, y1)) in points.iter().enumerate() {
     for &(x2, y2) in points.iter().skip(i + 1) {
@@ -71,7 +71,7 @@ fn has_overlap(
   false
 }
 
-fn part_2(points: &Vec<(u64, u64)>) -> u64 {
+fn part_2(points: Vec<(u64, u64)>) -> u64 {
   let mut horizontal_lines: BTreeMap<u64, IntervalSet<u64>> = BTreeMap::new();
   let mut vertical_lines: BTreeMap<u64, IntervalSet<u64>> = BTreeMap::new();
   for (i, &(x1, y1)) in points.iter().enumerate() {
@@ -122,11 +122,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 50);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 50);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 24);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 24);
   }
 }

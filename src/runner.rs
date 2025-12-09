@@ -11,15 +11,15 @@ macro_rules! solution {
     };
 }
 
-pub struct Solution<I, S1: ToString, S2: ToString> {
+pub struct Solution<I: Clone, S1: ToString, S2: ToString> {
   pub day: u8,
   pub year: u16,
   pub parse: fn(&str) -> I,
-  pub part_1: fn(&I) -> S1,
-  pub part_2: fn(&I) -> S2,
+  pub part_1: fn(I) -> S1,
+  pub part_2: fn(I) -> S2,
 }
 
-impl<I, S1: ToString, S2: ToString> Solution<I, S1, S2> {
+impl<I: Clone, S1: ToString, S2: ToString> Solution<I, S1, S2> {
   pub fn run(&self) {
     let options = CLIOptions::parse();
     let client = libaoc::Client::new().expect("Failed to create AoC client");
@@ -30,7 +30,7 @@ impl<I, S1: ToString, S2: ToString> Solution<I, S1, S2> {
     let (parsed, parse_time) = time(|| (self.parse)(&input));
 
     if options.part.includes_part_1() {
-      let (result, solve_time) = time(|| (self.part_1)(&parsed));
+      let (result, solve_time) = time(|| (self.part_1)(parsed.clone()));
       let result = result.to_string();
 
       println!("Part 1: {result} (parse {parse_time:?}, solve {solve_time:?})");
@@ -43,7 +43,7 @@ impl<I, S1: ToString, S2: ToString> Solution<I, S1, S2> {
     }
 
     if options.part.includes_part_2() {
-      let (result, solve_time) = time(|| (self.part_2)(&parsed));
+      let (result, solve_time) = time(|| (self.part_2)(parsed.clone()));
       let result = result.to_string();
 
       println!("Part 2: {result} (parse {parse_time:?}, solve {solve_time:?})");

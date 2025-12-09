@@ -106,9 +106,9 @@ fn parse(input: &str) -> Vec<Point> {
   )
 }
 
-fn part_1(points: &Vec<Point>, connections: usize) -> usize {
+fn part_1(points: Vec<Point>, connections: usize) -> usize {
   let mut graph = JunctionGraph::new();
-  for &(p1, p2) in sorted_edges(points).iter().take(connections) {
+  for &(p1, p2) in sorted_edges(&points).iter().take(connections) {
     graph.add_connection(p1, p2);
   }
 
@@ -117,9 +117,9 @@ fn part_1(points: &Vec<Point>, connections: usize) -> usize {
   networks.into_iter().take(3).map(|net| net.len()).product()
 }
 
-fn part_2(points: &Vec<Point>) -> u32 {
+fn part_2(points: Vec<Point>) -> u32 {
   let mut graph = JunctionGraph::new();
-  for (p1, p2) in sorted_edges(points) {
+  for (p1, p2) in sorted_edges(&points) {
     graph.add_connection(p1, p2);
     if graph.total_points() == points.len() && graph.total_networks() == 1 {
       return p1.x * p2.x;
@@ -159,11 +159,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT), 10), 40);
+    assert_eq!(part_1(parse(SAMPLE_INPUT), 10), 40);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 25272);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 25272);
   }
 }

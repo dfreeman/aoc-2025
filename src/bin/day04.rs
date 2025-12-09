@@ -26,14 +26,14 @@ fn occupied_neighbours(cell: &GridCell<bool>) -> usize {
     .count()
 }
 
-fn part_1(grid: &Grid<bool>) -> usize {
+fn part_1(grid: Grid<bool>) -> usize {
   grid
     .cells()
     .filter(|&cell| *cell && occupied_neighbours(&cell) < 4)
     .count()
 }
 
-fn part_2(grid: &Grid<bool>) -> u64 {
+fn part_2(grid: Grid<bool>) -> u64 {
   let mut grid = grid.clone();
   let mut count = 0;
   loop {
@@ -71,11 +71,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 13);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 13);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 43);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 43);
   }
 }

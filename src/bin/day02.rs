@@ -21,7 +21,7 @@ fn parse(input: &str) -> Vec<(u64, u64)> {
 }
 
 /// "Oh cool, I can just do this with math!"
-fn part_1(input: &Vec<(u64, u64)>) -> u64 {
+fn part_1(input: Vec<(u64, u64)>) -> u64 {
   input
     .iter()
     .flat_map(|&(start, end)| {
@@ -66,7 +66,7 @@ fn split(n: u64, parts: u32) -> Option<Vec<u64>> {
 }
 
 /// "...actually, brute force is sounding pretty good right now."
-fn part_2(input: &Vec<(u64, u64)>) -> u64 {
+fn part_2(input: Vec<(u64, u64)>) -> u64 {
   input
     .iter()
     .map(|&(start, end)| {
@@ -99,11 +99,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 1227775554);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 1227775554);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 4174379265);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 4174379265);
   }
 }

@@ -50,7 +50,7 @@ impl Op {
   }
 }
 
-fn part_1(input: &String) -> u64 {
+fn part_1(input: String) -> u64 {
   let (rows, ops) = input.parse_full(separated_pair(
     separated_list1(
       newline,
@@ -90,7 +90,7 @@ fn collect_vertical_problems(lines: Lines) -> Vec<Vec<u64>> {
   problems
 }
 
-fn part_2(input: &String) -> u64 {
+fn part_2(input: String) -> u64 {
   let mut lines = input.trim().lines();
   let ops = lines
     .next_back()
@@ -121,11 +121,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 4277556);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 4277556);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 3263827);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 3263827);
   }
 }

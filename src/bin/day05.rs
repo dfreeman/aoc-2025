@@ -24,7 +24,7 @@ fn parse(input: &str) -> Parsed {
   ))
 }
 
-fn part_1((ranges, ids): &Parsed) -> usize {
+fn part_1((ranges, ids): Parsed) -> usize {
   ids
     .iter()
     .filter(|&id| {
@@ -35,9 +35,7 @@ fn part_1((ranges, ids): &Parsed) -> usize {
     .count()
 }
 
-fn part_2((ranges, _): &Parsed) -> u64 {
-  let mut ranges = ranges.clone();
-
+fn part_2((mut ranges, _): Parsed) -> u64 {
   // Sorting ensures any ranges that full subsume others are processed first
   ranges.sort_by(|&a, &b| (b.1 - b.0).cmp(&(a.1 - a.0)));
 
@@ -80,11 +78,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 3);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 3);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 14);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 14);
   }
 }

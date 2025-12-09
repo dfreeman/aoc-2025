@@ -38,7 +38,7 @@ fn max_in<T: Ord>(els: &Vec<T>, range: impl RangeBounds<usize>) -> (usize, &T) {
     .expect("max_in called with an empty Vec")
 }
 
-fn part_1(input: &Vec<Vec<u64>>) -> u64 {
+fn part_1(input: Vec<Vec<u64>>) -> u64 {
   let mut sum = 0;
   for row in input {
     let (idx, lhs) = max_in(&row, ..(row.len() - 1));
@@ -48,7 +48,7 @@ fn part_1(input: &Vec<Vec<u64>>) -> u64 {
   sum
 }
 
-fn part_2(input: &Vec<Vec<u64>>) -> u64 {
+fn part_2(input: Vec<Vec<u64>>) -> u64 {
   let mut sum = 0;
   for row in input {
     let mut start = 0;
@@ -76,11 +76,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 357);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 357);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 3121910778619);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 3121910778619);
   }
 }

@@ -44,9 +44,9 @@ fn parse(input: &str) -> Layout {
   (start as isize, grid)
 }
 
-fn part_1((start, grid): &Layout) -> u64 {
+fn part_1((start, grid): Layout) -> u64 {
   let mut splits = 0;
-  let mut cells = vec![grid.cell((0, *start))];
+  let mut cells = vec![grid.cell((0, start))];
   while !cells.is_empty() {
     let mut new_cells = vec![];
     for cell in cells {
@@ -69,10 +69,10 @@ fn part_1((start, grid): &Layout) -> u64 {
   splits
 }
 
-fn part_2((start, grid): &Layout) -> u64 {
+fn part_2((start, grid): Layout) -> u64 {
   let grid = grid.map(|c| QuantumNonsense::new(*c));
 
-  grid[(0, *start)].increment_paths(1);
+  grid[(0, start)].increment_paths(1);
 
   for cell in grid.cells().filter(|c| c.paths() > 0) {
     if let Some(next) = cell.neighbour(Direction::S) {
@@ -117,11 +117,11 @@ mod tests {
 
   #[test]
   fn test_part1() {
-    assert_eq!(part_1(&parse(SAMPLE_INPUT)), 21);
+    assert_eq!(part_1(parse(SAMPLE_INPUT)), 21);
   }
 
   #[test]
   fn test_part2() {
-    assert_eq!(part_2(&parse(SAMPLE_INPUT)), 40);
+    assert_eq!(part_2(parse(SAMPLE_INPUT)), 40);
   }
 }
