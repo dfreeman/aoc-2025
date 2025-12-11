@@ -1,8 +1,4 @@
 use aoc::prelude::*;
-use nom::{
-  character::complete::{char, i32},
-  sequence::pair,
-};
 
 solution! {
   year: 2025,
@@ -28,6 +24,8 @@ impl Dir {
 }
 
 fn parse(input: &str) -> Vec<(Dir, i32)> {
+  use parse::*;
+
   let dir = char('L')
     .map(|_| Dir::Left)
     .or(char('R').map(|_| Dir::Right));

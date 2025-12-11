@@ -1,11 +1,6 @@
 use std::str::Lines;
 
-use aoc::prelude::*;
-use nom::{
-  character::complete::{newline, one_of, space0, space1, u64},
-  multi::separated_list1,
-  sequence::{delimited, separated_pair},
-};
+use aoc::prelude::{parse::*, *};
 
 solution! {
   year: 2025,

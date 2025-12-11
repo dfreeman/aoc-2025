@@ -4,7 +4,6 @@ use std::{
 };
 
 use aoc::prelude::*;
-use nom::{bytes::complete::tag, character::complete::u32, multi::separated_list1};
 
 solution! {
   year: 2025,
@@ -98,6 +97,8 @@ impl Point {
 }
 
 fn parse(input: &str) -> Vec<Point> {
+  use parse::*;
+
   input.parse_lines(
     separated_list1(tag(","), u32).map(|ns| match ns.as_slice() {
       [x, y, z] => Point::new(*x, *y, *z),

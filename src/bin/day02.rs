@@ -1,9 +1,4 @@
 use aoc::prelude::*;
-use nom::{
-  character::complete::{char, u64},
-  multi::separated_list1,
-  sequence::separated_pair,
-};
 
 solution! {
   year: 2025,
@@ -14,6 +9,8 @@ solution! {
 }
 
 fn parse(input: &str) -> Vec<(u64, u64)> {
+  use parse::*;
+
   input.parse_full(separated_list1(
     char(','),
     separated_pair(u64, char('-'), u64),

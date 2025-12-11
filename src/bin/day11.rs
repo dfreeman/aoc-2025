@@ -2,10 +2,6 @@ use std::collections::HashMap;
 
 use aoc::prelude::*;
 use itertools::Itertools;
-use nom::bytes::complete::tag;
-use nom::character::complete::alpha1;
-use nom::multi::separated_list1;
-use nom::sequence::separated_pair;
 use pathfinding::prelude::count_paths;
 
 solution! {
@@ -17,6 +13,8 @@ solution! {
 }
 
 fn parse(input: &str) -> HashMap<String, Vec<String>> {
+  use parse::*;
+
   HashMap::from_iter(input.parse_lines(separated_pair(
     alpha1.map(String::from),
     tag(": "),

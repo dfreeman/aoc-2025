@@ -1,10 +1,6 @@
 use aoc::prelude::*;
 use itertools::Itertools;
 use microlp::{ComparisonOp, OptimizationDirection, Problem};
-use nom::bytes::complete::tag;
-use nom::character::complete::{one_of, u64};
-use nom::multi::{many1, separated_list1};
-use nom::sequence::{delimited, separated_pair};
 
 solution! {
   year: 2025,
@@ -17,6 +13,8 @@ solution! {
 type Parsed = Vec<(Vec<char>, Vec<Vec<u64>>, Vec<u64>)>;
 
 fn parse(input: &str) -> Parsed {
+  use parse::*;
+
   input
     .parse_lines(separated_pair(
       delimited(tag("["), many1(one_of(".#")), tag("]")),

@@ -1,6 +1,5 @@
 use aoc::prelude::*;
 use interval::prelude::*;
-use nom::{bytes::complete::tag, character::complete::u64, sequence::separated_pair};
 use std::collections::BTreeMap;
 
 solution! {
@@ -12,6 +11,8 @@ solution! {
 }
 
 fn parse(input: &str) -> Vec<(u64, u64)> {
+  use parse::*;
+
   input.parse_lines(separated_pair(u64, tag(","), u64))
 }
 

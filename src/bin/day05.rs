@@ -1,10 +1,4 @@
 use aoc::prelude::*;
-use nom::{
-  bytes::complete::tag,
-  character::complete::{char, newline, u64},
-  multi::separated_list1,
-  sequence::separated_pair,
-};
 
 solution! {
   year: 2025,
@@ -17,6 +11,8 @@ solution! {
 type Parsed = (Vec<(u64, u64)>, Vec<u64>);
 
 fn parse(input: &str) -> Parsed {
+  use parse::*;
+
   input.parse_full(separated_pair(
     separated_list1(newline, separated_pair(u64, char('-'), u64)),
     tag("\n\n"),
